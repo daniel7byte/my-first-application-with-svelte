@@ -1,12 +1,15 @@
 <script>
     export let idAnswer, votes, content;
 
-    const handleInput = (event) => {
-        console.time("Voto")
-        vote(idAnswer)
-    }
+    let disabled = false;
 
-    const vote = async (idAnswer) => {
+    const vote = async () => {
+
+        console.time("Voto")
+
+        disabled = true;
+
+        votes++;
 
         let votesCurrent = 0;
 
@@ -28,6 +31,7 @@
         .then(res => res.json())
         .then(data => {
             votes = data.votes
+            disabled = false;
             console.timeEnd("Voto")
         })
     }
@@ -51,8 +55,11 @@
     button:active {
         background-color: #1b5e20;
     }
+    button:disabled {
+        background-color: #F44336;
+    }
 </style>
 
 <span>{votes}</span>
 {content}
-<button on:click={handleInput}>+1</button>
+<button {disabled} on:click={vote}>+1</button>

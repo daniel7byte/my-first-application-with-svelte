@@ -5,39 +5,6 @@
         const response = await fetch('http://localhost:1337/questions')
         return response.json()
     })()
-
-    const handleInput = (event) => {
-        console.time("Voto")
-        let idAnswer = event.target.getAttribute('data-answer-id')
-        vote(idAnswer)
-        console.timeEnd("Voto")
-    }
-
-    const vote = async (idAnswer) => {
-
-        let votesCurrent = 0;
-
-        const fetchAnswer = await fetch(`http://localhost:1337/answers/${idAnswer}`)
-                                .then(res => res.json())
-                                .then((data) => {
-                                    votesCurrent = data.votes
-                                })
-
-        await fetch(`http://localhost:1337/answers/${idAnswer}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                votes: votesCurrent + 1
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            const span = document.getElementById(idAnswer)
-            span.innerHTML = data.votes 
-        })
-    }
 </script>
 
 <style>
