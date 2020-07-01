@@ -1,16 +1,9 @@
 <script>
-    import Answer from './Answer.svelte'
-
-	const fetchQuestions = (async () => {
-        const response = await fetch('http://localhost:1337/questions')
-        return response.json()
-    })()
+    export let idAnswer, votes, content;
 
     const handleInput = (event) => {
         console.time("Voto")
-        let idAnswer = event.target.getAttribute('data-answer-id')
         vote(idAnswer)
-        console.timeEnd("Voto")
     }
 
     const vote = async (idAnswer) => {
@@ -34,8 +27,8 @@
         })
         .then(res => res.json())
         .then(data => {
-            const span = document.getElementById(idAnswer)
-            span.innerHTML = data.votes 
+            votes = data.votes
+            console.timeEnd("Voto")
         })
     }
 </script>
@@ -46,30 +39,20 @@
     * {
         font-family: 'Roboto', sans-serif;
     }
+    span {
+        color:#f44336;
+        text-decoration-line: underline;
+    }
+    button {
+        background-color: #4caf50;
+        color: white;
+        border-radius: 6px;
+    }
+    button:active {
+        background-color: #1b5e20;
+    }
 </style>
 
-<h1>Questions</h1>
-
-{#await fetchQuestions}
-	<p>...waiting</p>
-{:then questions}
-    <ul>
-	{#each questions as question}
-        <li>
-            {question.title}
-        </li>
-         <ul>
-        {#each question.answers as answer}
-            <li>
-                <div>
-                    <Answer idAnswer={answer._id} votes={answer.votes} content={answer.content} />
-                </div>
-
-            </li>    
-        {/each}
-        </ul>
-    {/each}
-    </ul>
-{:catch error}
-	<p>An error occurred!</p>
-{/await}
+<span>{votes}</span>
+{content}
+<button on:click={handleInput}>+1</button>
